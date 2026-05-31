@@ -51,6 +51,14 @@ Contest
       └── Class results (overall standings)
 ```
 
+## How to access it using an scrapper
+
+In the case that the user is asking to use an scrapper, use the following URL
+
+https://www.soaringspot.com/en_gb/ + competition ID
+
+after that get the pilot list and Tasks & Results
+
 ## How to access it (MCP tools)
 
 A `soaringspot` MCP server is available to query the platform. The general

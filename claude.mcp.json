@@ -1,0 +1,7 @@
+      "mcpServers": {
+        "soaringspot": {
+          "type": "http",
+          "url": "http://localhost:9009/soaringspot"
+        }
+      },
+

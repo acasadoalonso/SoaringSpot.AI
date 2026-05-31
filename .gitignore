@@ -1,0 +1,10 @@
+# Credentials — never commit
+env.sh
+run.sh
+SoaringSpot/clientid
+SoaringSpot/secretkey
+
+# Python
+.venv/
+__pycache__/
+*.pyc

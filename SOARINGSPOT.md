@@ -7,6 +7,18 @@ holds the complete record of competitions, from local contests to world
 championships, and serves as the authoritative source for scoring, tasks, and
 participant data in the gliding community.
 
+## Governing rules
+
+World and Continental gliding championships are run under the FAI Sporting Code.
+The authoritative ruleset is **Annex A to Section 3 — FAI Rules for World and
+Continental Gliding Championships**:
+
+- [SC3A 2025a (PDF)](https://www.fai.org/sites/default/files/document/file/SC3A_2025a.pdf)
+
+These rules define class definitions, eligibility, task setting, scoring, and the
+team competition — the framework behind the contests, tasks, and results stored in
+SoaringSpot.
+
 ## What it contains
 
 SoaringSpot stores, for every championship, the full competition dataset:

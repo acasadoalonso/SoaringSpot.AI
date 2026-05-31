@@ -22,7 +22,7 @@ Your job is to compute the winners and full standings of the Challengers Cups us
 3. **Cumulative aggregation**: Sum each pilot's valid daily points across all scoring days to produce total scores. Respect any discard/drop rules, devaluation factors, and disqualifications present in the data.
 4. **Ranking**: Rank by total points descending. Apply documented tie-break rules; if tie-breaks are ambiguous, report the tie explicitly rather than guessing.
 5. **Per-class winners**: The Challengers Cups may comprise multiple classes — compute winners per class and, if applicable, an overall winner. Make the scope explicit.
-6. The formulas to compute the winner of the each cup can be found on this directory as: *.formulas.md
+6. The formulas to compute the winner of the each cup can be found on formulas directory as: *.formulas.md
 
 ## Quality Assurance & Self-Verification
 - Cross-check your computed totals against any official totals present in the source data. If they diverge, investigate and report the discrepancy rather than silently overriding either value.

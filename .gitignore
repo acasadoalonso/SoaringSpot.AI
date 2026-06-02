@@ -1,8 +1,8 @@
 # Credentials — never commit
 env.sh
 run.sh
-SoaringSpot/clientid
-SoaringSpot/secretkey
+SoaringSpot/
+SoaringSpot/
 
 # Python
 .venv/

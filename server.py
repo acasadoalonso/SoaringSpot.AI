@@ -40,24 +40,26 @@ from fastmcp import FastMCP
 CLIENT_ID = os.environ.get("SOARINGSPOT_CLIENT_ID", "")
 SECRET    = os.environ.get("SOARINGSPOT_SECRET", "").encode()
 BASE_URL  = os.environ.get("SOARINGSPOT_BASE_URL", "http://api.soaringspot.com/v1")
+COMPNAME  = os.environ.get("SOARINGSPOT_COMPNAME", "")
 prt=False
 apiurl   = "http://api.soaringspot.com/"        # soaringspot API URL
 rel      = "v1"   
-utc = datetime.datetime.utcnow()
+#utc = datetime.datetime.utcnow()
+utc = datetime.datetime.now(datetime.UTC)
 date = utc.strftime("%Y-%m-%dT%H:%M:%SZ")
 if not CLIENT_ID or not SECRET:
     # 
     if prt:
        print("Reading the clientid/secretkey from the SoaringSpot directory")
     # if client/screct keys are not in the config file, read it for SoaringSpot directory
-    f = open("SoaringSpot/"+"clientid") 	# open the file with the client id
+    f = open("SoaringSpot/"+COMPNAME+"/clientid") 	# open the file with the client id
     client = f.read()               	    # read it
     CLIENT_ID = client.rstrip('\n') 		# clear the whitespace at the end
-    f = open("SoaringSpot/"+"secretkey") 	# open the file with the secret key
+    f = open("SoaringSpot/"+COMPNAME+"/secretkey") 	# open the file with the secret key
     secretkey = f.read()            	# read it
            					# clear the whitespace at the end
     SECRET = secretkey.rstrip('\n').encode(encoding='utf-8')
-
+    print ("SoaringSpot Credentials for comp:", COMPNAME, "\n", CLIENT_ID, "\n", SECRET)
     if not CLIENT_ID or not SECRET:
        raise RuntimeError(
         "Environment variables SOARINGSPOT_CLIENT_ID and SOARINGSPOT_SECRET are required."

@@ -84,6 +84,10 @@ single competition's admin panel and are **valid only for that one competition**
 they are *not* universal keys for all of SoaringSpot. The client ID is even prefixed
 with the contest ID (e.g. `5249_…` for WGC 2026). Querying a different competition
 requires that competition's own credentials.
+The credentials for an specific competitions are under the directory SoaringSpot 
+and within that directory on a subdirectory that matches the name with the 
+competition name, for example SoaringSpot/wgc2026/clientid or
+SoaringSpot/wgc2026/secretkey
 
 ### If the MCP server is down
 

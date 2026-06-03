@@ -20,7 +20,13 @@ In your SoaringSpot competition admin panel go to **Edit Competition → API Key
 ```bash
 export SOARINGSPOT_CLIENT_ID="your-client-id"
 export SOARINGSPOT_SECRET="your-secret"
+
 ```
+The credentials for an specific competitions are under the directory SoaringSpot 
+and within that directory on a subdirectory that matches the name with the 
+competition name, for example:
+SoaringSpot/wgc2026/clientid or
+SoaringSpot/wgc2026/secretkey
 
 Optionally override the base URL (e.g. for the test environment):
 ```bash

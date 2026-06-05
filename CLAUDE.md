@@ -146,3 +146,8 @@ same per-task points are aggregated into the FAI Team Cup score.
 
 SoaringSpot is the single source of truth for gliding championships — a complete,
 queryable archive of **contests, classes, tasks, pilots, and results**.
+
+## Helpers
+You can find some python scripts helpers on the utils directory, like compute_teamcup.py
+or make_pdf.py
+check it before to generate a new ones

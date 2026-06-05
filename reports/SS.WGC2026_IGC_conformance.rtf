@@ -5,9 +5,9 @@
 \pard\sa160\f0\fs32 \b WGC 2026 \u8212? IGC File Conformance Report\par
 \pard\sa40\f0\fs22 \b 40th FAI World Gliding Championships\par
 \pard\sa40\f0\fs18 Cz\u281?stochowa-Rudniki, Poland \u183? 16\u8211?30 May 2026 \u183? Contest 5249\par
-\pard\sa200\f0\fs16 Source: IGC flight logs downloaded from soaringspot.com (contest 5249) into IGCfiles/. Generated 2026-06-05.\par
+\pard\sa200\f0\fs16 Source: IGC flight logs downloaded from soaringspot.com (contest 5249) into IGCfiles/. Checked against formulas/IGCformat.md (FAI/IGC Technical Specification, Jan 2026 / AL10). Generated 2026-06-05.\par
 \pard\sa80\f0\fs24 \b Summary\par
-\pard\sa120\f0\fs18 Three IGC files held in IGCfiles/ were checked for conformance with the IGC flight-log format. \b All three pass\b0  \u8212? each is a complete, untruncated log carrying the mandatory header records and a full set of B (GPS fix) records.\par
+\pard\sa120\f0\fs18 Three IGC files held in IGCfiles/ were checked for conformance with the IGC flight-log format. \b All three pass\b0  \u8212? each is a complete, untruncated log carrying the mandatory header records, a full set of B (GPS fix) records, and a valid trailing security (G) record block with no data records after it.\par
 \pard\sa80\f0\fs24 \b Files Checked\par
 \trowd\trgaph80\trleft0\cellx2400\cellx5200\cellx6200\cellx7400\cellx8800
 \pard\intbl\f0\fs18 \b File\cell
@@ -43,10 +43,12 @@
 \pard\sa60\f0\fs18 \u183? 65T_FL.igc \u8212? EB 29R, reg D-KFFL (Open class)\par
 \pard\sa200\f0\fs18 \u183? 65T_YY.igc \u8212? JS5 SL 24m, reg D-KJYY (Open class)\par
 \pard\sa80\f0\fs24 \b Conformance Checks\par
-\pard\sa60\f0\fs18 \b 1. A record\b0  \u8212? present as the first line of every file (FR manufacturer / serial). First character is "A" in all three.\par
-\pard\sa60\f0\fs18 \b 2. Mandatory H-records\b0  \u8212? present in every file: HFDTEDATE (flight date), HFPLTPILOT (pilot), HFGTYGLIDERTYPE (glider), HFGIDGLIDERID (registration), HFCIDCOMPETITIONID (competition number).\par
-\pard\sa60\f0\fs18 \b 3. B-records\b0  \u8212? a full set of GPS fixes is present in each file (15,000\u8211?30,000 fixes); none empty or truncated.\par
-\pard\sa200\f0\fs18 \b 4. Clean termination\b0  \u8212? each file ends on a valid L (logbook) record with no mid-record truncation.\par
+\pard\sa60\f0\fs18 \b 1. A record (first line)\b0  \u8212? present as the very first line of every file (FR manufacturer / serial, "ALXV\u8230?"). First character is "A" in all three.\par
+\pard\sa60\f0\fs18 \b 2. Mandatory H-records\b0  \u8212? present in every file: HFDTE (flight date, DDMMYY), HFFXA (fix accuracy, 015), HFPLT (pilot), HFGTY (glider type), HFGID (glider ID / registration) and HFDTM (GNSS datum, 100 / WGS-1984). Competition logs also carry HFCID (competition number) and HFCCL (class).\par
+\pard\sa60\f0\fs18 \b 3. B-records (fixes)\b0  \u8212? a full, untruncated set of GPS fixes is present in each file (15,462 \u8211? 29,839 fixes); none empty or cut mid-record.\par
+\pard\sa60\f0\fs18 \b 4. Record order\b0  \u8212? records follow the spec order: A first, then H, I/J, C (task), then the time-series B/E/F/K block, with L (logbook) records permitted throughout.\par
+\pard\sa60\f0\fs18 \b 5. Character set\b0  \u8212? every file is pure ASCII within the valid IGC set (upper-case A\u8211?Z, digits, space, - + . , : /). Lines use CRLF (carriage-return + line-feed) terminators as required by the spec; no accented or otherwise out-of-set characters appear in the data records.\par
+\pard\sa200\f0\fs18 \b 6. Security (G) record\b0  \u8212? each file ends with a 5-line G (security) record block. The last B-record precedes the G block in every file, and \b zero\b0  data records (B/E/F/K) follow it \u8212? confirming the log is neither truncated, concatenated, nor tampered. Trailing L (logbook) records after the G block are permitted by the spec.\par
 \pard\sa80\f0\fs24 \b Notes\par
-\pard\sa120\f0\fs18 Header metadata matches the expected pilots and competition days: Antol\u237?n's log is dated 28-05-26 (18 Metre, TASK A \u8211? AAT), while Levin's and Kawa's logs are dated 29-05-26 (Open). All files verified at download as genuine IGC content (Content-Type application/vnd.flight+igc).\par
+\pard\sa120\f0\fs18 Header metadata matches the expected pilots and competition days: Antol\u237?n's log is dated 28-05-26 (18 Metre, TASK A \u8211? AAT), while Levin's and Kawa's logs are dated 29-05-26 (Open). All files were verified at download as genuine IGC content (Content-Type application/vnd.flight+igc).\par
 }

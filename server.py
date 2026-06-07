@@ -37,6 +37,7 @@ from fastmcp import FastMCP
 
 # ── Configuration ─────────────────────────────────────────────────────────────
 
+global CLIENT_ID, SECRET, COMPNAME, prt
 CLIENT_ID = os.environ.get("SOARINGSPOT_CLIENT_ID", "")
 SECRET    = os.environ.get("SOARINGSPOT_SECRET", "").encode()
 BASE_URL  = os.environ.get("SOARINGSPOT_BASE_URL", "http://api.soaringspot.com/v1")
@@ -47,7 +48,7 @@ rel      = "v1"
 #utc = datetime.datetime.utcnow()
 utc = datetime.datetime.now(datetime.UTC)
 date = utc.strftime("%Y-%m-%dT%H:%M:%SZ")
-if not CLIENT_ID or not SECRET:
+if COMPNAME and (not CLIENT_ID or not SECRET):
     # 
     if prt:
        print("Reading the clientid/secretkey from the SoaringSpot directory")
@@ -59,7 +60,7 @@ if not CLIENT_ID or not SECRET:
     secretkey = f.read()            	# read it
            					# clear the whitespace at the end
     SECRET = secretkey.rstrip('\n').encode(encoding='utf-8')
-    print ("SoaringSpot Credentials for comp:", COMPNAME, "\n", CLIENT_ID, "\n", SECRET)
+    print ("SoaringSpot Credentials for comp:\n", COMPNAME, "\n", CLIENT_ID, "\n", SECRET)
     if not CLIENT_ID or not SECRET:
        raise RuntimeError(
         "Environment variables SOARINGSPOT_CLIENT_ID and SOARINGSPOT_SECRET are required."
@@ -155,6 +156,35 @@ mcp = FastMCP(
 )
 
 # ─── Utility ──────────────────────────────────────────────────────────────────
+@mcp.tool
+def set_compname (
+    compname: Annotated[str, "Competition name."]) -> str:
+    """
+    This function get the name of the compname and adjust the credentials
+    Based on the compname it reads the credentails (clien_id and secret)
+    for the SoaringSpot directory 
+    """
+    global COMPNAME, CLIENT_ID, SECRET, prt
+    COMPNAME=compname           #
+    CLIENT_ID=""
+    SECRET=""
+    print("Reading the clientid/secretkey from the SoaringSpot directory for comp:", COMPNAME)
+    # if client/screct keys are not in the config file, read it for SoaringSpot directory
+    f = open("SoaringSpot/"+COMPNAME+"/clientid") 	# open the file with the client id
+    client = f.read()               	    # read it
+    CLIENT_ID = client.rstrip('\n') 		# clear the whitespace at the end
+    f = open("SoaringSpot/"+COMPNAME+"/secretkey") 	# open the file with the secret key
+    secretkey = f.read()            	# read it
+           					# clear the whitespace at the end
+    SECRET = secretkey.rstrip('\n').encode(encoding='utf-8')
+    if prt:
+       print ("SoaringSpot Credentials for comp:\n", COMPNAME, "\n", CLIENT_ID, "\n", SECRET)
+    if not CLIENT_ID or not SECRET:
+       raise RuntimeError(
+        "Environment variables SOARINGSPOT_CLIENT_ID and SOARINGSPOT_SECRET are required."
+    )
+    return (COMPNAME)
+
 
 @mcp.tool
 async def get_server_time() -> dict:

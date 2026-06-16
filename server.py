@@ -158,24 +158,26 @@ mcp = FastMCP(
 # ─── Utility ──────────────────────────────────────────────────────────────────
 @mcp.tool
 def set_compname (
-    compname: Annotated[str, "Competition name."]) -> str:
+    compname: Annotated[str, "Competition name."]) -> dict:
     """
     This function get the name of the compname and adjust the credentials
-    Based on the compname it reads the credentails (clien_id and secret)
-    for the SoaringSpot directory 
+    Based on the compname it reads the credentials (client_id and secret)
+    from the SoaringSpot directory 
+    It returns the compname (for verification) and the compid used in other
+    requests
     """
     global COMPNAME, CLIENT_ID, SECRET, prt
-    COMPNAME=compname           #
+    COMPNAME=compname                               #
     CLIENT_ID=""
     SECRET=""
     print("Reading the clientid/secretkey from the SoaringSpot directory for comp:", COMPNAME)
     # if client/screct keys are not in the config file, read it for SoaringSpot directory
     f = open("SoaringSpot/"+COMPNAME+"/clientid") 	# open the file with the client id
-    client = f.read()               	    # read it
-    CLIENT_ID = client.rstrip('\n') 		# clear the whitespace at the end
+    client = f.read()               	            # read it
+    CLIENT_ID = client.rstrip('\n') 		        # clear the whitespace at the end
     f = open("SoaringSpot/"+COMPNAME+"/secretkey") 	# open the file with the secret key
-    secretkey = f.read()            	# read it
-           					# clear the whitespace at the end
+    secretkey = f.read()            	            # read it
+           					                        # clear the whitespace at the end
     SECRET = secretkey.rstrip('\n').encode(encoding='utf-8')
     if prt:
        print ("SoaringSpot Credentials for comp:\n", COMPNAME, "\n", CLIENT_ID, "\n", SECRET)
@@ -183,7 +185,7 @@ def set_compname (
        raise RuntimeError(
         "Environment variables SOARINGSPOT_CLIENT_ID and SOARINGSPOT_SECRET are required."
     )
-    return (COMPNAME)
+    return {"Competition_name":COMPNAME, "comp_id":CLIENT_ID[0:4]}
 
 
 @mcp.tool

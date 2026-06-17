@@ -170,6 +170,11 @@ def set_compname (
     COMPNAME=compname                               #
     CLIENT_ID=""
     SECRET=""
+    if COMPNAME=='' or COMPNAME == ' ':
+        return {"No competion name provided":"None"}
+    if not os.path.exists("SoaringSpot/"+COMPNAME):
+        return {"Competition is not handled by this MCP server":COMPNAME}
+
     print("Reading the clientid/secretkey from the SoaringSpot directory for comp:", COMPNAME)
     # if client/screct keys are not in the config file, read it for SoaringSpot directory
     f = open("SoaringSpot/"+COMPNAME+"/clientid") 	# open the file with the client id
@@ -186,6 +191,25 @@ def set_compname (
         "Environment variables SOARINGSPOT_CLIENT_ID and SOARINGSPOT_SECRET are required."
     )
     return {"Competition_name":COMPNAME, "comp_id":CLIENT_ID[0:4]}
+
+
+@mcp.tool
+async def list_compnames  () -> dict:
+    """
+    This function list the handled competitions for this MCP server
+    It returns the list of available competitions, so later on it can use the set compname
+    requests
+    """
+    complist=[] 
+    from pathlib import Path
+    source_dir = Path('SoaringSpot/')
+
+    files = source_dir.iterdir()
+    for file in files:
+        if prt:
+           print("Comp:", file)
+        complist.append(file)
+    return {"Competitons handled":complist}
 
 
 @mcp.tool

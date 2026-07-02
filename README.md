@@ -40,26 +40,26 @@ export SOARINGSPOT_BASE_URL="https://api.test.soaringspot.com/v1"
 ### HTTP (default — streamable-http, port 8000)
 
 ```bash
-python server.py
+python ss_server.py
 # → http://127.0.0.1:8000/mcp
 ```
 
 ### Custom host / port / path
 
 ```bash
-python server.py --host 0.0.0.0 --port 9000 --path /soaringspot
+python ss_server.py --host 0.0.0.0 --port 9000 --path /soaringspot
 ```
 
 ### SSE transport
 
 ```bash
-python server.py --transport sse --port 8000
+python ss_server.py --transport sse --port 8000
 ```
 
 ### stdio (Claude Desktop)
 
 ```bash
-python server.py --transport stdio
+python ss_server.py --transport stdio
 ```
 
 ---
@@ -71,7 +71,7 @@ python server.py --transport stdio
   "mcpServers": {
     "soaringspot": {
       "command": "python",
-      "args": ["/absolute/path/to/soaringspot_mcp/server.py", "--transport", "stdio"],
+      "args": ["/absolute/path/to/soaringspot_mcp/ss_server.py", "--transport", "stdio"],
       "env": {
         "SOARINGSPOT_CLIENT_ID": "<your-client-id>",
         "SOARINGSPOT_SECRET": "<your-secret>"

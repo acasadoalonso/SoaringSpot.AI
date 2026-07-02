@@ -16,10 +16,10 @@ WORKDIR /app
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY server.py ./
+COPY ss_server.py ./
 COPY .env        ./
 
 EXPOSE 9009
 
-CMD ["python", "server.py", "--host", "0.0.0.0", "--port", "9009", "--path","/soaringspot"]
+CMD ["python", "ss_server.py", "--host", "0.0.0.0", "--port", "9009", "--path","/soaringspot"]
 

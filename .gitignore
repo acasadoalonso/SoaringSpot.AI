@@ -2,8 +2,7 @@
 env.sh
 run.sh
 SoaringSpot/
-SoaringSpot/
-
+IGCfiles/
 # Python
 .venv/
 __pycache__/

@@ -10,15 +10,15 @@ Transport: HTTP (streamable-http) by default, also supports stdio and SSE.
 
 Usage:
   # HTTP (default, port 8000)
-  SOARINGSPOT_CLIENT_ID=xxx SOARINGSPOT_SECRET=yyy python server.py
+  SOARINGSPOT_CLIENT_ID=xxx SOARINGSPOT_SECRET=yyy python ss_server.py
 
   # Override host / port / transport
   SOARINGSPOT_CLIENT_ID=xxx SOARINGSPOT_SECRET=yyy \
-    python server.py --transport http --host 0.0.0.0 --port 9000
+    python ss_server.py --transport http --host 0.0.0.0 --port 9000
 
   # stdio (for Claude Desktop)
   SOARINGSPOT_CLIENT_ID=xxx SOARINGSPOT_SECRET=yyy \
-    python server.py --transport stdio
+    python ss_server.py --transport stdio
 """
 
 import argparse
@@ -33,6 +33,8 @@ from typing import Annotated, Optional
 import time
 import datetime
 import httpx
+import urllib.request
+
 from fastmcp import FastMCP
 
 # ── Configuration ─────────────────────────────────────────────────────────────
@@ -118,6 +120,38 @@ async def _get(path: str, params: Optional[dict] = None) -> dict:
     return resp.json()
 
 
+async def _get_from_url(url: str, params: Optional[dict] = None) -> str:
+    """Authenticated GET → dict (HAL+JSON)."""
+    print (">>>>>>>> Header:", _headers(), url, file=sys.stderr)
+    print ("UUU",    BASE_URL+"/flights/"+url)
+
+    req = urllib.request.Request(
+        BASE_URL+"/flights/"+url,
+        headers=_headers())
+    try:
+        with urllib.request.urlopen(req, timeout=60) as resp:
+            data = resp.read()
+            ctype = resp.headers.get("Content-Type", "")
+    except urllib.error.HTTPError as e:
+        sys.exit(f"HTTP {e.code} fetching {url}: {e.reason}")
+    except urllib.error.URLError as e:
+        sys.exit(f"Network error fetching {url}: {e.reason}")
+       # Guard against accidentally saving an auth-error JSON body as an .igc.
+    head = data[:64].lstrip()
+    if head.startswith(b"{") or head.startswith(b"<"):
+        sys.exit(
+            f"Endpoint returned {ctype or 'non-IGC'} content "
+            f"({len(data)} bytes) — not an IGC file. First bytes: {head[:80]!r}"
+        )
+
+    #print(f"Saved {len(data):,} bytes -> {out_path}  (comp={comp}, type={ctype})")
+    print(f"Saved {len(data):,} , type={ctype})")
+
+
+    return {"data":data, "datalengh":len(data)}
+
+
+
 async def _get_xml(path: str) -> str:
     """Authenticated GET → raw XML string."""
     hdrs = _headers()
@@ -192,6 +226,17 @@ def set_compname (
     )
     return {"Competition_name":COMPNAME, "comp_id":CLIENT_ID[0:4]}
 
+@mcp.tool
+async def get_credentials () -> dict:
+    """
+    This function return the credentials clientid and secretkey
+    """
+    global COMPNAME, CLIENT_ID, SECRET, prt
+    if not CLIENT_ID or not SECRET:
+       raise RuntimeError(
+        "Environment variables SOARINGSPOT_CLIENT_ID and SOARINGSPOT_SECRET are required.\n Use set compname"
+    )
+    return{"clientid":CLIENT_ID, "secretkey":SECRET}
 
 @mcp.tool
 async def list_compnames  () -> dict:
@@ -403,16 +448,40 @@ async def get_task_results(
 
 
 # ─── Flights ──────────────────────────────────────────────────────────────────
-
+#
 @mcp.tool
 async def get_flight(
-    id: Annotated[int, "Result ID (from task results)."],
-) -> dict:
+    int: Annotated[int, "Flight ID (from task results)."]) -> dict:
+    """
+    Get the flight/IGC data and metadata for a specific result.
+    Use result Flight ID obtained from get_task_results.
+    Flight ID is a large integer number 
+    """
+    print("FFF ID",f"/flights/{id}")
+    if type({id}) is  int:
+       f=str({id})
+       return await _get(f"/flights/"+f)
+
+    return await _get(f"/flights/{id}")
+
+
+@mcp.tool
+async def get_flight_from_url(
+    url: Annotated[str, "URL string provided by the user"]) -> dict:
     """
     Get the flight/IGC data and metadata for a specific result.
     Use result IDs obtained from get_task_results.
+    Ask for API URL on task results and feed that to this function
+    The _get_from_url retrns a dict with the raw data and the data length
     """
-    return await _get(f"/flights/{id}")
+    print("URL",url)
+    p=url.find('flights/')
+    if p == -1:
+        urlurl=url
+    else:
+        urlurl=url[p+8:]
+    print ("url:", urlurl)
+    return await _get_from_url(urlurl)
 
 
 # ─── Locations & Images ───────────────────────────────────────────────────────
